@@ -66,7 +66,7 @@ public class Handler {
         for (int i = 0; i < book.size(); i++) {
             if (functionIndex == 0 && book.get(i).getID().equals(ID)) {
                 parseBookToPager(book.get(i));
-                match = true;
+                return;
             } else if (functionIndex == 1 && book.get(i).getTitle().toLowerCase().contains(keyword.toLowerCase())) {
                 parseBookToPager(book.get(i));
                 match = true;
@@ -180,7 +180,30 @@ public class Handler {
     }
 
     public void delete() {
-        //
+        pager.header("Delete Book");
+        UUID ID = null;
+        try {
+            ID = UUID.fromString(pager.customInput("ID", true));
+        } catch (IllegalArgumentException e) {
+            pager.footer();
+            pager.info("Invalid book ID");
+            return;
+        }
+        Inventory<Book> book = library.getAllBooks();
+        if (book == null || book.size() == 0) {
+            pager.info("No book found in library");
+            return;
+        }
+        for (int i = 0; i < book.size(); i++) {
+            if (book.get(i).getID().equals(ID)) {
+                pager.footer();
+                parseBookToPager(book.get(i));
+                library.removeBook(book.get(i));
+                return;
+            }
+        }
+        pager.footer();
+        pager.info("No book found with ID " + ID);
     }
 
     public void quit() {
