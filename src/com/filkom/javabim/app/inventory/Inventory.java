@@ -14,8 +14,8 @@ public class Inventory<T> {
         return this.itemList;
     }
 
-    public void updateItem(T item) {
-        this.itemList.add(item);
+    public void updateItem(int index, T item) {
+        this.itemList.set(index, item);
     }
 
     public void removeItem(T item) {

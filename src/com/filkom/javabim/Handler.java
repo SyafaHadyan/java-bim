@@ -1,5 +1,3 @@
-import util.Pager;
-
 import java.net.URI;
 import java.net.URL;
 import java.net.URISyntaxException;
@@ -7,15 +5,14 @@ import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.time.DateTimeException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.UUID;
 
+import util.Pager;
 import app.book.Book;
 import app.inventory.Inventory;
 import app.library.Library;
 
 public class Handler {
-    Scanner scanner = new Scanner(System.in);
     Pager pager = new Pager();
     Library library = new Library();
 
@@ -41,53 +38,8 @@ public class Handler {
                 "Stock: " + book.getStock());
     }
 
-    public void customSearch(int functionIndex) {
-        pager.header("Search");
-        String keyword = null;
-        UUID ID = null;
-        if (functionIndex == 0) {
-            try {
-                ID = UUID.fromString(pager.customInput("ID", true));
-            } catch (IllegalArgumentException e) {
-                pager.footer();
-                pager.info("Invalid book ID");
-                return;
-            }
-        } else {
-            keyword = pager.customInput("Keyword", true);
-        }
-        pager.footer();
-        boolean match = false;
-        Inventory<Book> book = library.getAllBooks();
-        if (book == null || book.size() == 0) {
-            pager.info("No book found in library");
-            return;
-        }
-        for (int i = 0; i < book.size(); i++) {
-            if (functionIndex == 0 && book.get(i).getID().equals(ID)) {
-                parseBookToPager(book.get(i));
-                return;
-            } else if (functionIndex == 1 && book.get(i).getTitle().toLowerCase().contains(keyword.toLowerCase())) {
-                parseBookToPager(book.get(i));
-                match = true;
-            } else if (functionIndex == 2 && book.get(i).getAuthor().toLowerCase().contains(keyword.toLowerCase())) {
-                parseBookToPager(book.get(i));
-                match = true;
-            }
-        }
-        if (!match) {
-            if (functionIndex == 0) {
-                pager.info("No book found with ID " + ID);
-            } else if (functionIndex == 1) {
-                pager.info("No book found with title " + keyword);
-            } else if (functionIndex == 2) {
-                pager.info("No book found with author " + keyword);
-            }
-        }
-    }
-
-    public void create() {
-        pager.header("Create New Book");
+    private Book completeMetadataInput() {
+        pager.header("Enter Book Info");
         String title;
         int edition = 0;
         String author;
@@ -136,8 +88,57 @@ public class Handler {
                 pager.message("Stock must be a positive number");
             }
         }
-        library.addBook(new Book(title, edition, author, bookCover, publishedDate, stock));
         pager.footer();
+        return new Book(title, edition, author, bookCover, publishedDate, stock);
+    }
+
+    private void customSearch(int functionIndex) {
+        pager.header("Search");
+        String keyword = null;
+        UUID ID = null;
+        if (functionIndex == 0) {
+            try {
+                ID = UUID.fromString(pager.customInput("ID", true));
+            } catch (IllegalArgumentException e) {
+                pager.footer();
+                pager.info("Invalid book ID");
+                return;
+            }
+        } else {
+            keyword = pager.customInput("Keyword", true);
+        }
+        pager.footer();
+        boolean match = false;
+        Inventory<Book> book = library.getAllBooks();
+        if (book == null || book.size() == 0) {
+            pager.info("No book found in library");
+            return;
+        }
+        for (int i = 0; i < book.size(); i++) {
+            if (functionIndex == 0 && book.get(i).getID().equals(ID)) {
+                parseBookToPager(book.get(i));
+                return;
+            } else if (functionIndex == 1 && book.get(i).getTitle().toLowerCase().contains(keyword.toLowerCase())) {
+                parseBookToPager(book.get(i));
+                match = true;
+            } else if (functionIndex == 2 && book.get(i).getAuthor().toLowerCase().contains(keyword.toLowerCase())) {
+                parseBookToPager(book.get(i));
+                match = true;
+            }
+        }
+        if (!match) {
+            if (functionIndex == 0) {
+                pager.info("No book found with ID " + ID);
+            } else if (functionIndex == 1) {
+                pager.info("No book found with title " + keyword);
+            } else if (functionIndex == 2) {
+                pager.info("No book found with author " + keyword);
+            }
+        }
+    }
+
+    public void create() {
+        library.addBook(completeMetadataInput());
     }
 
     public void get() {
@@ -176,7 +177,28 @@ public class Handler {
     }
 
     public void update() {
-        //
+        pager.header("Update Book");
+        UUID ID = null;
+        try {
+            ID = UUID.fromString(pager.customInput("ID", true));
+        } catch (IllegalArgumentException e) {
+            pager.footer();
+            pager.info("Invalid book ID");
+            return;
+        }
+        Inventory<Book> book = library.getAllBooks();
+        pager.footer();
+        if (book == null || book.size() == 0) {
+            pager.info("No book found in library");
+            return;
+        }
+        for (int i = 0; i < book.size(); i++) {
+            if (book.get(i).getID().equals(ID)) {
+                library.updateBook(i, completeMetadataInput());
+                return;
+            }
+        }
+        pager.info("No book found with ID " + ID);
     }
 
     public void delete() {

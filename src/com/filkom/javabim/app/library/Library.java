@@ -16,12 +16,8 @@ public class Library {
         return this.inventory;
     }
 
-    public ArrayList<Book> searchBooks(String keyword) {
-        return null;
-    }
-
-    public void updateBook(Book book) {
-        //
+    public void updateBook(int index, Book book) {
+        inventory.updateItem(index, book);
     }
 
     public void removeBook(Book book) {
