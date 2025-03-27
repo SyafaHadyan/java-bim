@@ -1,4 +1,4 @@
-package com.filkom.javalibman.library;
+package util;
 
 import java.util.Scanner;
 
