@@ -1,6 +1,8 @@
+package com.filkom.javabim;
+
 import java.util.Scanner;
 
-import util.Pager;
+import com.filkom.javabim.util.Pager;
 
 public class AppRun {
     static final String VERSION = "v1.0.0";

@@ -1,4 +1,4 @@
-package app.inventory;
+package com.filkom.javabim.app.inventory;
 
 import java.util.ArrayList;
 

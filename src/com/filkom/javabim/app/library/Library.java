@@ -1,7 +1,7 @@
-package app.library;
+package com.filkom.javabim.app.library;
 
-import app.book.Book;
-import app.inventory.Inventory;
+import com.filkom.javabim.app.book.Book;
+import com.filkom.javabim.app.inventory.Inventory;
 
 public class Library {
     Inventory<Book> inventory = new Inventory<>();

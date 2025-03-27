@@ -1,4 +1,4 @@
-package util;
+package com.filkom.javabim.util;
 
 import java.util.Scanner;
 

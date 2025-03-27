@@ -1,4 +1,4 @@
-package app.book;
+package com.filkom.javabim.app.book;
 
 import java.net.URI;
 import java.net.URL;
