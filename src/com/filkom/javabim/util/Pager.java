@@ -163,7 +163,7 @@ public class Pager {
         spacer();
         message("Press enter to continue");
         spacer();
-        input();
+        customInput();
         footer();
     }
 
@@ -216,5 +216,9 @@ public class Pager {
 
     public String customInput(String inputStyle) {
         return customGetInput(inputStyle, this.defaultSpaceBefore);
+    }
+
+    public String customInput() {
+        return customGetInput("", this.defaultSpaceBefore);
     }
 }
