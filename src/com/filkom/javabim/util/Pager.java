@@ -145,8 +145,8 @@ public class Pager {
 
     /*
      * Wrapper to print horizontal separator, spacer, message (center), spacer,
-     * horizontal separator (again), then end with spacer, all with just one
-     * function call. Than manually calling each function one by one.
+     * horizontal separator, then end with spacer, all with just one
+     * function call than manually calling each function one by one.
      *
      * Example:
      *
