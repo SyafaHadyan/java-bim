@@ -1,3 +1,5 @@
+package com.filkom.javabim;
+
 import java.net.URI;
 import java.net.URL;
 import java.net.URISyntaxException;
@@ -6,15 +8,21 @@ import java.time.LocalDate;
 import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
-import util.Pager;
-import app.book.Book;
-import app.inventory.Inventory;
-import app.library.Library;
+import com.filkom.javabim.util.Pager;
+import com.filkom.javabim.app.book.Book;
+import com.filkom.javabim.app.inventory.Inventory;
+import com.filkom.javabim.app.library.Library;
 
 public class Handler {
     Pager pager = new Pager();
     Library library = new Library();
+    Logger logger = Logger.getLogger(Handler.class.getName());
+
+    int readCount = 0;
+    int writeCount = 0;
 
     /*
      * Used to convert number to ordinal for displaying edition, when editon is 0
@@ -186,6 +194,7 @@ public class Handler {
     public void create() {
         /* Call completeMetadataInput then pass result to Library::addBook. */
         library.addBook(completeMetadataInput());
+        this.writeCount++;
     }
 
     /* Get alll books from Inventory. */
@@ -203,6 +212,7 @@ public class Handler {
         for (int i = 0; i < book.size(); i++) {
             parseBookToPager(book.get(i));
         }
+        this.readCount++;
     }
 
     /* Search book menu. */
@@ -226,6 +236,7 @@ public class Handler {
                 } else {
                     /* Call search function */
                     customSearch(userInputOption);
+                    this.readCount++;
                 }
             } catch (NumberFormatException e) {
                 /* Handle invalid integer */
@@ -262,6 +273,7 @@ public class Handler {
         for (int i = 0; i < book.size(); i++) {
             if (book.get(i).getID().equals(ID)) {
                 library.updateBook(i, completeMetadataInput());
+                this.writeCount++;
                 return;
             }
         }
@@ -272,6 +284,7 @@ public class Handler {
 
     /* Delete book with book ID */
     public void delete() {
+        readCount++;
         pager.header("Delete Book");
         UUID ID = null;
         try {
@@ -306,7 +319,8 @@ public class Handler {
 
     /* Quit function */
     public void quit() {
-        //
+        logger.log(Level.INFO, "Read count: " + this.readCount);
+        logger.log(Level.INFO, "Write count: " + this.writeCount);
     }
 
     /* Handle if user input is invalid */
