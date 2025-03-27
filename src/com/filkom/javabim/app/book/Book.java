@@ -7,6 +7,8 @@ import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import app.inventory.Inventory;
+
 public class Book {
     private UUID ID;
     private String title;
@@ -68,7 +70,7 @@ public class Book {
         this.stock = stock;
     }
 
-    public UUID getID() {
+    public <T extends Inventory> UUID getID() {
         return this.ID;
     }
 

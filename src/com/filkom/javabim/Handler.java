@@ -7,14 +7,38 @@ import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.time.DateTimeException;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 import app.book.Book;
+import app.inventory.Inventory;
 import app.library.Library;
 
 public class Handler {
     Scanner scanner = new Scanner(System.in);
     Pager pager = new Pager();
     Library library = new Library();
+
+    private String convertEditionNumberToOrdinal(int edition) {
+        String[] numberSuffix = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th",
+                "th" };
+        switch (edition % 100) {
+            case 0:
+                return "";
+            case 11:
+            case 12:
+            case 13:
+                return " " + edition + " th edition";
+            default:
+                return " " + edition + numberSuffix[edition % 10] + " edition";
+        }
+    }
+
+    private void parseBookToPager(Book book) {
+        String edition = convertEditionNumberToOrdinal(book.getEdition());
+        pager.info("ID: " + book.getID(), "Title: " + book.getTitle() + edition, "Author: " + book.getAuthor(),
+                "Book Cover: " + book.getBookCover(), "Published Date: " + book.getPublishedDate(),
+                "Stock: " + book.getStock());
+    }
 
     public void create() {
         pager.header("Create New Book");
@@ -71,6 +95,18 @@ public class Handler {
     }
 
     public void get() {
+        Inventory<Book> book = library.getAllBooks();
+        if (book == null) {
+            pager.info("No book found in library");
+            return;
+        }
+        pager.info("Book count: " + book.size());
+        for (int i = 0; i < book.size(); i++) {
+            parseBookToPager(book.get(i));
+        }
+    }
+
+    public void search() {
         //
     }
 

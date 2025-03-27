@@ -1,11 +1,9 @@
 package app.inventory;
 
 import java.util.ArrayList;
-import java.util.UUID;
-
-import app.book.Book;
 
 public class Inventory<T> {
+
     private ArrayList<T> itemList = new ArrayList<>();
 
     public void addItem(T item) {
@@ -28,4 +26,11 @@ public class Inventory<T> {
         itemList.remove(item);
     }
 
+    public int size() {
+        return this.itemList.size();
+    }
+
+    public T get(int i) {
+        return itemList.get(i);
+    }
 }

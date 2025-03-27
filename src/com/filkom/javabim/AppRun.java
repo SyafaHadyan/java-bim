@@ -20,6 +20,7 @@ public class AppRun {
             pager.message("(5) Quit");
             pager.spacer();
             String userInputOption = pager.input();
+            pager.footer();
             switch (userInputOption) {
                 case "0":
                     handler.create();
@@ -44,7 +45,6 @@ public class AppRun {
                     handler.invalidInput();
                     break;
             }
-            pager.footer();
         }
     }
 }
