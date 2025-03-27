@@ -219,6 +219,6 @@ public class Pager {
     }
 
     public String customInput() {
-        return customGetInput("", this.defaultSpaceBefore);
+        return customGetInput("", this.defaultSpaceBefore - 1);
     }
 }
