@@ -6,8 +6,9 @@ import java.net.URISyntaxException;
 import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.time.DateTimeException;
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.UUID;
 
 import app.book.Book;
 import app.inventory.Inventory;
@@ -38,6 +39,51 @@ public class Handler {
         pager.info("ID: " + book.getID(), "Title: " + book.getTitle() + edition, "Author: " + book.getAuthor(),
                 "Book Cover: " + book.getBookCover(), "Published Date: " + book.getPublishedDate(),
                 "Stock: " + book.getStock());
+    }
+
+    public void customSearch(int functionIndex) {
+        pager.header("Search");
+        String keyword = null;
+        UUID ID = null;
+        if (functionIndex == 0) {
+            try {
+                ID = UUID.fromString(pager.customInput("ID", true));
+            } catch (IllegalArgumentException e) {
+                pager.footer();
+                pager.info("Invalid book ID");
+                return;
+            }
+        } else {
+            keyword = pager.customInput("Keyword", true);
+        }
+        pager.footer();
+        boolean match = false;
+        Inventory<Book> book = library.getAllBooks();
+        if (book == null || book.size() == 0) {
+            pager.info("No book found in library");
+            return;
+        }
+        for (int i = 0; i < book.size(); i++) {
+            if (functionIndex == 0 && book.get(i).getID().equals(ID)) {
+                parseBookToPager(book.get(i));
+                match = true;
+            } else if (functionIndex == 1 && book.get(i).getTitle().toLowerCase().contains(keyword.toLowerCase())) {
+                parseBookToPager(book.get(i));
+                match = true;
+            } else if (functionIndex == 2 && book.get(i).getAuthor().toLowerCase().contains(keyword.toLowerCase())) {
+                parseBookToPager(book.get(i));
+                match = true;
+            }
+        }
+        if (!match) {
+            if (functionIndex == 0) {
+                pager.info("No book found with ID " + ID);
+            } else if (functionIndex == 1) {
+                pager.info("No book found with title " + keyword);
+            } else if (functionIndex == 2) {
+                pager.info("No book found with author " + keyword);
+            }
+        }
     }
 
     public void create() {
@@ -96,7 +142,7 @@ public class Handler {
 
     public void get() {
         Inventory<Book> book = library.getAllBooks();
-        if (book == null) {
+        if (book == null || book.size() == 0) {
             pager.info("No book found in library");
             return;
         }
@@ -107,7 +153,26 @@ public class Handler {
     }
 
     public void search() {
-        //
+        while (true) {
+            pager.header("Search Book");
+            pager.message("(0) Search by ID");
+            pager.message("(1) Search by Title");
+            pager.message("(2) Search by Author");
+            pager.message("(3) Return to Main Menu");
+            pager.spacer();
+            try {
+                int userInputOption = Integer.parseUnsignedInt(pager.input());
+                if (userInputOption == 3) {
+                    return;
+                } else if (userInputOption > 3) {
+                    invalidInput();
+                } else {
+                    customSearch(userInputOption);
+                }
+            } catch (NumberFormatException e) {
+                invalidInput();
+            }
+        }
     }
 
     public void update() {
@@ -123,6 +188,6 @@ public class Handler {
     }
 
     public void invalidInput() {
-        //
+        pager.info("Invalid input");
     }
 }
