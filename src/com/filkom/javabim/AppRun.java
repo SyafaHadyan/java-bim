@@ -10,6 +10,7 @@ public class AppRun {
         Pager pager = new Pager();
         Handler handler = new Handler();
 
+        /* Loop indefinetely until quit is selected. */
         while (true) {
             pager.header("Java Book Inventory Manager " + VERSION);
             pager.message("(0) Input Book");
@@ -19,8 +20,12 @@ public class AppRun {
             pager.message("(4) Delete Book");
             pager.message("(5) Quit");
             pager.spacer();
+
+            /* Call input function from Pager class. */
             String userInputOption = pager.input();
             pager.footer();
+
+            /* Switch user input, if invalid, call invalid input handler. */
             switch (userInputOption) {
                 case "0":
                     handler.create();

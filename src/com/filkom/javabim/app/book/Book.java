@@ -7,8 +7,6 @@ import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import app.inventory.Inventory;
-
 public class Book {
     private UUID ID;
     private String title;
@@ -18,6 +16,7 @@ public class Book {
     private LocalDate publishedDate;
     private int stock;
 
+    /* Empty constructor to debug / testing purposes. */
     public Book() {
         this.ID = UUID.randomUUID();
         this.title = "Operating System Concepts";
@@ -32,6 +31,18 @@ public class Book {
         this.stock = 64;
     }
 
+    /*
+     * Constructor with all attributes of the book, will generate random UUID
+     * (Universally Unique Identifier) to ensure that no more than one book can have
+     * the same ID.
+     *
+     * WIKIPEDIA:
+     * the probability to find a duplicate within 103 trillion version-4 UUIDs is
+     * one in a billion.
+     *
+     * UUID is most likely safe to be used here. Even if UUID collision happens,
+     * just use hashmap to find if current ID has been used or not.
+     */
     public Book(String title, int edition, String author, URL bookCover, LocalDate publishedDate, int stock) {
         this.ID = UUID.randomUUID();
         this.title = title;
@@ -42,6 +53,7 @@ public class Book {
         this.stock = stock;
     }
 
+    /* Setters */
     public void setID(UUID ID) {
         this.ID = ID;
     }
@@ -70,7 +82,8 @@ public class Book {
         this.stock = stock;
     }
 
-    public <T extends Inventory> UUID getID() {
+    /* Getters */
+    public UUID getID() {
         return this.ID;
     }
 
